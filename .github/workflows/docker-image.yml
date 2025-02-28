@@ -2,23 +2,37 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main  # Trigger on push to the main branch
     tags:
-        - 'v*'  # Trigger when a tag like v1.0.0 is pushed
+      - 'v*'  # Trigger on tag push (e.g., v1.0.0)
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
-
     steps:
-    
-    - name: Extract version from tag
-      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-        
-    # TODO: Use environment variable for tagging purposes
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag pet-store/data-transform:0.1.0
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up JDK (required for building Spring Boot app)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adoptopenjdk'
+
+      # Build the Spring Boot app using Gradle
+      - name: Build with Gradle
+        run: gradlew clean build
+
+      # Build and Push Docker Image
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            petStore/data-transform:0.1.0  
+            petStore/data-transform:latest  
