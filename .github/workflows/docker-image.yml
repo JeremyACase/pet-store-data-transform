@@ -76,7 +76,7 @@ jobs:
 
   containerize:
     runs-on: ubuntu-latest
-    needs: [lint, test]  # Ensure this step runs after the test step
+    needs: [lint, test]  
     
     steps:
 
@@ -92,10 +92,32 @@ jobs:
         run: |
           docker build -t pet-store/data-transform:0.1.0 .
 
-      - name: Push Docker image
-        run: |
-          docker push pet-store/data-transform:0.1.0
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: . 
 
-      - name: Tag Docker image as 'latest' and push
-        run: |
-          docker push pet-store/data-transform:latest
+  publish:
+    runs-on: ubuntu-latest
+    needs: containerize
+    steps:
+
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: docker-image
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: Push Docker image
+      run: |
+        docker push pet-store/data-transform:0.1.0
+
+    - name: Tag Docker image as 'latest' and push
+      run: |
+        docker push pet-store/data-transform:latest
