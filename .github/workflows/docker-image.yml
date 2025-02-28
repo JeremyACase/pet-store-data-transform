@@ -16,7 +16,7 @@ jobs:
     steps:
     
     - name: Extract version from tag
-      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         
     - uses: actions/checkout@v4
     - name: Build the Docker image
