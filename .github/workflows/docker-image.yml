@@ -88,7 +88,14 @@ jobs:
         with:
           name: build-artifacts
 
-      # Step 2: Build Docker image with the latest tag
+      - name: test
+        run: |
+          ls -a
+
+      - name: pwd
+        run: |
+          pwd
+
       - name: Build Docker image
         run: |
           docker build -t pet-store/data-transform:0.1.0 .
@@ -103,12 +110,10 @@ jobs:
         with:
           name: build-artifacts
 
-      # Step 3: Push Docker image to Docker Hub
       - name: Push Docker image
         run: |
           docker push pet-store/data-transform:0.1.0
 
-      # Step 4: Optionally tag the image as 'latest' and push
       - name: Tag Docker image as 'latest' and push
         run: |
           docker push pet-store/data-transform:latest
