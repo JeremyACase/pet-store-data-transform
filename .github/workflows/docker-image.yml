@@ -21,11 +21,15 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adoptopenjdk'
+          distribution: 'temurin'  # Updated distribution
 
-      # Build the Spring Boot app using Gradle
-      - name: Build with Gradle
-        run: gradlew clean build
+      # Build 
+      - name: Build
+        run: gradlew clean build -x test
+      
+      # Test
+      - name: Test
+        run: gradlew clean test
 
       # Build and Push Docker Image
       - name: Build and Push Docker Image
