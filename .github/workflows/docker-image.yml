@@ -25,11 +25,11 @@ jobs:
 
       # Build 
       - name: Build
-        run: gradlew clean build -x test
+        run: ./gradlew clean build -x test
       
       # Test
       - name: Test
-        run: gradlew clean test
+        run: ./gradlew clean test
 
       # Build and Push Docker Image
       - name: Build and Push Docker Image
