@@ -1,0 +1,86 @@
+buildscript {
+    repositories {
+        dependencies {
+            classpath 'org.owasp:dependency-check-gradle:11.0.0'
+        }
+    }
+}
+
+plugins {
+    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '3.2.4'
+}
+
+repositories {
+    mavenCentral()
+}
+
+allprojects {
+    apply plugin: "checkstyle"
+    apply plugin: "java"
+    apply plugin: "jacoco"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "org.owasp.dependencycheck"       
+}
+
+group = 'org.machina.pet.store'
+version = '0.1.0'
+
+/**
+* Ensure our code quality doesn't turn to garbage.
+*/
+checkstyle {
+    configFile file('config/checkstyle/checkstyle.xml');
+    toolVersion '10.12.1';
+}
+
+/**
+* Some of that code coverage we all need.
+*/
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+/**
+* Instruct our code coverage tool where to place the report.
+*/
+jacocoTestReport {
+    reports {
+        xml.required=true
+        csv.required=false
+        xml.destination file("./build/reports/jacoco.xml")
+        html.destination file("./build/reports/jacocoHtml")
+    }
+}
+
+/**
+* Version control variables for dependencies.
+*/
+ext {
+    INSTANCIO_VERSION='4.3.2'
+    INSTANCIO_VERSION='4.3.2'
+    LOGBACK_VERSION='1.5.13'
+    SPRING_BOOT_VERSION='3.2.4'
+    SPRING_BOOT_KAFKA_VERSION='3.1.2'
+    SPRING_DOC_VERSION='2.6.0'
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: "${SPRING_BOOT_VERSION}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${SPRING_BOOT_VERSION}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: "${SPRING_BOOT_VERSION}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${SPRING_BOOT_VERSION}"
+
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: "${LOGBACK_VERSION}"
+    implementation group: 'org.instancio', name: 'instancio-junit', version: "${INSTANCIO_VERSION}"
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: "${SPRING_DOC_VERSION}"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+build.dependsOn jacocoTestReport
