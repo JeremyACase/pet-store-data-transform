@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Build Pipeline
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
       - main  # Trigger on push to the main branch
     tags:
       - 'v*'  # Trigger on tag push (e.g., v1.0.0)
+
+env:
+  IMAGE_NAME: pet-store/data-transform 
 
 jobs:
 
@@ -88,9 +91,19 @@ jobs:
         with:
           name: build-artifacts
 
+      - name: Get version tag      
+        id: get_version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          else
+            VERSION_TAG=latest
+          fi
+          echo "IMAGE_TAG=$VERSION_TAG" >> $GITHUB_ENV
+
       - name: Build Docker image
         run: |
-          docker build -t pet-store/data-transform:0.1.0 .
+          docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
 
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v4
@@ -114,10 +127,23 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Push Docker image
+    - name: Get version tag
+      id: get_version
       run: |
-        docker push pet-store/data-transform:0.1.0
+        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          VERSION_TAG=${GITHUB_REF#refs/tags/}
+        else
+          VERSION_TAG=latest
+        fi
+        echo "IMAGE_TAG=$VERSION_TAG" >> $GITHUB_ENV
 
-    - name: Tag Docker image as 'latest' and push
+    - name: Push Docker image to Docker Hub
       run: |
-        docker push pet-store/data-transform:latest
+        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:${IMAGE_TAG}
+        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+        
+    - name: Tag image as latest and push
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+        docker push ${IMAGE_NAME}:latest
