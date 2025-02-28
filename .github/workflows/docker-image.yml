@@ -38,6 +38,9 @@ jobs:
     needs: build  # Ensure this step runs after the build step
     steps:
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -53,6 +56,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build  # Ensure this step runs after the build step
     steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -70,6 +76,9 @@ jobs:
     needs: [lint, test]  # Ensure this step runs after the test step
     
     steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
       
       - name: Download build artifacts
         uses: actions/download-artifact@v4
