@@ -23,6 +23,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'  # Updated distribution
 
+      # Setup
+      - name: Setup
+        run: chmod +x ./gradlew
+
       # Build 
       - name: Build
         run: ./gradlew clean build -x test
