@@ -121,6 +121,16 @@ jobs:
       with:
         name: docker-image
 
+    - name: Get version tag      
+      id: get_version
+      run: |
+        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          VERSION_TAG=${GITHUB_REF#refs/tags/}
+        else
+          VERSION_TAG=latest
+        fi
+        echo "IMAGE_TAG=$VERSION_TAG" >> $GITHUB_ENV
+
     - name: Load Docker image from tar file
       run: |
         docker load -i ${IMAGE_NAME}:${IMAGE_TAG}.tar
