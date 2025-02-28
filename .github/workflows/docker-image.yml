@@ -25,7 +25,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build
-        run: ./gradlew build -x test -x checkstyle
+        run: ./gradlew build -x test -x checkstyleMain -x checkstyleTest
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
