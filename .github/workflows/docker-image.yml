@@ -49,8 +49,11 @@ jobs:
       - name: Setup permissions
         run: chmod +x ./gradlew
 
-      - name: Run linting with Gradle
-        run: ./gradlew checkstyle
+      - name: Lint main
+        run: ./gradlew checkstyleMain
+
+      - name: Lint test
+        run: ./gradlew checkstyleMain
 
   test:
     runs-on: ubuntu-latest
