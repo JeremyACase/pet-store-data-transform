@@ -58,10 +58,7 @@ jobs:
       # Step 2: Build Docker image with the latest tag
       - name: Build Docker image
         run: |
-          IMAGE_TAG=${{ github.ref }}
-          # Extract version from the tag (e.g., v1.0.0 -> 1.0.0)
-          VERSION_TAG=$(echo $IMAGE_TAG | sed 's/refs\/tags\///')
-          docker build -t pet-store/data-transform:${VERSION_TAG} .
+          docker build -t pet-store/data-transform:0.1.0 .
 
   publish:
     runs-on: ubuntu-latest
@@ -74,9 +71,7 @@ jobs:
       # Step 3: Push Docker image to Docker Hub
       - name: Push Docker image
         run: |
-          IMAGE_TAG=${{ github.ref }}
-          VERSION_TAG=$(echo $IMAGE_TAG | sed 's/refs\/tags\///')
-          docker push pet-store/data-transform:${VERSION_TAG}
+          docker push pet-store/data-transform:0.1.0
 
       # Step 4: Optionally tag the image as 'latest' and push
       - name: Tag Docker image as 'latest' and push
