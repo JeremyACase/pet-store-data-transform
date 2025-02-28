@@ -16,19 +16,9 @@ jobs:
     steps:
     
     - name: Extract version from tag
-      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
         
-    # Set up Docker Buildx (optional but recommended for multi-platform support)
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    # Build and Push Docker Image
-    - name: Build and Push Docker Image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        # TODO: Replace with version from environment
-        tags: |
-          petStore/data-transform:0.1.0 
-          petStore/data-transform:latest
+    # TODO: Use environment variable for tagging purposes
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag pet-store/data-transform:0.1.0
