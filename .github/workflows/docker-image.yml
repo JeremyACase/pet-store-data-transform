@@ -131,6 +131,10 @@ jobs:
         fi
         echo "IMAGE_TAG=$VERSION_TAG" >> $GITHUB_ENV
 
+    - name: Stuff
+      run: |
+        ls
+
     - name: Load Docker image from tar file
       run: |
         docker load -i ${IMAGE_NAME}:${IMAGE_TAG}.tar
