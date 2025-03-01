@@ -105,11 +105,15 @@ jobs:
         run: |
           docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
 
+      - name: Package Docker image
+        run: |
+          docker save -o ${IMAGE_NAME}-${IMAGE_TAG}.tar ${IMAGE_NAME}:${IMAGE_TAG}
+
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v4
         with:
           name: docker-image
-          path: . 
+          path: ./*.tar  
 
   publish:
     runs-on: ubuntu-latest
