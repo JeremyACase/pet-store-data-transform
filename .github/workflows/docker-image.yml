@@ -121,7 +121,7 @@ jobs:
       with:
         name: docker-image
 
-    - name: Get version tag      
+    - name: Get version tag
       id: get_version
       run: |
         if [[ "${{ github.ref }}" == refs/tags/* ]]; then
@@ -141,15 +141,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Get version tag
-      id: get_version
-      run: |
-        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-          VERSION_TAG=${GITHUB_REF#refs/tags/}
-        else
-          VERSION_TAG=latest
-        fi
-        echo "IMAGE_TAG=$VERSION_TAG" >> $GITHUB_ENV
 
     - name: Push Docker image to Docker Hub
       run: |
