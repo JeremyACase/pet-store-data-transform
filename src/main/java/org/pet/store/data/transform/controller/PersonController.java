@@ -64,23 +64,4 @@ public class PersonController {
         logger.info("Got person: {}", this.objectMapper.writeValueAsString(randomPerson));
         return randomPerson;
     }
-
-    /**
-     * Adopt a pet with a new owner.
-     *
-     * @param pet The pet to adopt.
-     * @return The person object who adopted the pet.
-     * @throws JsonProcessingException Exceptions from parsing out the random person.
-     */
-    @PostMapping("/adopt-pet")
-    public Person adoptPet(@RequestBody @Valid final Pet pet)
-        throws JsonProcessingException {
-        logger.info("Received a pet to adopt: {}", pet);
-
-        var random = new Random();
-        var randomPerson = this.people.get(random.nextInt(this.people.size()));
-        randomPerson.getPetList().add(pet);
-        logger.info("Pet adopted by: {}", this.objectMapper.writeValueAsString(randomPerson));
-        return randomPerson;
-    }
 }
